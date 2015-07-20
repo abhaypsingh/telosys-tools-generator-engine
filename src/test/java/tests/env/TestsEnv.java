@@ -267,7 +267,8 @@ public class TestsEnv {
 		System.out.println("Loading configuration from folder : " + projectFolder.getAbsolutePath() );
 		TelosysToolsCfgManager cfgManager = new TelosysToolsCfgManager( projectFolder.getAbsolutePath() );
 		try {
-			telosysToolsCfg = cfgManager.loadProjectConfig();
+			//telosysToolsCfg = cfgManager.loadProjectConfig();
+			telosysToolsCfg = cfgManager.loadTelosysToolsCfg();
 		} catch (TelosysToolsException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Cannot load 'TelosysToolsCfg'", e);
