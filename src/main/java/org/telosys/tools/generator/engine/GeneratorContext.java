@@ -23,6 +23,10 @@ public class GeneratorContext {
 	
 	private final HashMap<String,Object> map = new HashMap<String,Object>();
 	
+	public GeneratorContext() {
+		
+	}
+	
 	protected final Map<String,Object> getMap() {
 		return map;
 	}
