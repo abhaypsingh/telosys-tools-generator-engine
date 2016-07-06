@@ -25,7 +25,6 @@ import java.io.StringReader;
 import org.apache.velocity.Template;
 import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.RuntimeSingleton;
-import org.apache.velocity.runtime.parser.ParseException;
 import org.apache.velocity.runtime.parser.node.SimpleNode;
 import org.telosys.tools.commons.FileUtil;
 import org.telosys.tools.generator.engine.directive.AssertFalseDirective;
@@ -48,7 +47,7 @@ public class GeneratorTemplate {
 	
 	private Template velocityTemplate = null ;
 
-	public GeneratorTemplate(String folderName, String fileName, byte[] content) {
+	protected GeneratorTemplate(String folderName, String fileName, byte[] content) {
 		super();
 		this.folderName = folderName;
 		this.fileName = fileName;
@@ -56,7 +55,7 @@ public class GeneratorTemplate {
 		this.contentString = null ;
 	}
 
-	public GeneratorTemplate(String folderName, String fileName, String content) {
+	protected GeneratorTemplate(String folderName, String fileName, String content) {
 		super();
 		this.folderName = folderName;
 		this.fileName = fileName;
@@ -84,15 +83,15 @@ public class GeneratorTemplate {
 		this.contentString = null ;
 	}
 
-	public String getFolderName() {
+	protected String getFolderName() {
 		return folderName;
 	}
 
-	public String getFileName() {
+	protected String getFileName() {
 		return fileName;
 	}
 
-	public byte[] getContentByteArray() {
+	protected byte[] getContentByteArray() {
 		if ( contentByteArray != null ) {
 			return contentByteArray;
 		}
@@ -104,7 +103,7 @@ public class GeneratorTemplate {
 		}
 	}
 	
-	public String getContentString() {
+	protected String getContentString() {
 		if ( contentString != null ) {
 			return contentString ;
 		}
@@ -116,11 +115,11 @@ public class GeneratorTemplate {
 		}
 	}
 	
-	public boolean contentIsString() {
+	protected boolean contentIsString() {
 		return contentString != null ;
 	}
 
-	public boolean contentIsByteArray() {
+	protected boolean contentIsByteArray() {
 		return contentByteArray != null ;
 	}
 	
@@ -153,13 +152,16 @@ public class GeneratorTemplate {
 		runtimeServices.setProperty(USER_DIRECTIVE_NAME, USER_DIRECTIVE_VALUE);
 		//runtimeServices.init(arg0);
 
-		SimpleNode node;
-		try {
-			node = runtimeServices.parse(templateContentReader, templateName);
-		} catch (ParseException e) {			
-			e.printStackTrace();
-			throw new Exception("Parsing error in template",e);
-		}
+//		SimpleNode node;
+//		try {
+//			node = runtimeServices.parse(templateContentReader, templateName);
+//		} catch (ParseException e) {			
+//			e.printStackTrace();
+//			throw new Exception("Parsing error in template",e);
+//		}
+		// 'parse' throws Velocity 'ParseException' ( extends 'java.lang.Exception' )
+		SimpleNode node = runtimeServices.parse(templateContentReader, templateName); // v 3.0.0
+
 		Template template = new Template();
 		template.setRuntimeServices(runtimeServices);
 		template.setData(node);
@@ -168,8 +170,6 @@ public class GeneratorTemplate {
 		// init() is not longer dependent upon context, but we need to let the init() carry the template name down throught 
 		// for VM namespace features
 		template.initDocument();
-		
-		
 		
 		return template ;
 	}
