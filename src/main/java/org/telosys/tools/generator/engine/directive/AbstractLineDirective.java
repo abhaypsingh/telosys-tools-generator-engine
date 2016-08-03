@@ -92,6 +92,17 @@ public abstract class AbstractLineDirective extends Directive {
 		}
 	}
 	
+	protected Object getArgument( int index, Node node, InternalContextAdapter context) {
+		Object o = node.jjtGetChild(index).value(context);
+		if ( o != null ) {
+			return o ;
+		}
+		else {
+			String message = "invalid argument #" + index + "( argument is null )" ;
+			throw new DirectiveException( message, this.getName(), node.getTemplateName(), node.getLine() );
+		}
+	}
+	
 	/*
 	 * EXEMPLE 
 	 *        Node childNode = node.jjtGetChild(0);

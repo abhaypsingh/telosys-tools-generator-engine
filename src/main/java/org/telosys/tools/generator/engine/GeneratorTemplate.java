@@ -29,6 +29,7 @@ import org.apache.velocity.runtime.parser.node.SimpleNode;
 import org.telosys.tools.commons.FileUtil;
 import org.telosys.tools.generator.engine.directive.AssertFalseDirective;
 import org.telosys.tools.generator.engine.directive.AssertTrueDirective;
+import org.telosys.tools.generator.engine.directive.CheckIdDirective;
 import org.telosys.tools.generator.engine.directive.ErrorDirective;
 import org.telosys.tools.generator.engine.directive.UsingDirective;
 
@@ -181,6 +182,8 @@ public class GeneratorTemplate {
 				+ AssertTrueDirective.class.getCanonicalName() 
 				+ ", " 
 				+ AssertFalseDirective.class.getCanonicalName() 
+				+ ", " 
+				+ CheckIdDirective.class.getCanonicalName() 
 				+ ", " 
 				+ ErrorDirective.class.getCanonicalName() 
 				; // one or n directive(s) separated by a comma 
