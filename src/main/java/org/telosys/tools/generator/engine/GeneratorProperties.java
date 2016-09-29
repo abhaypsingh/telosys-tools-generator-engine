@@ -72,6 +72,10 @@ public class GeneratorProperties {
 	private final static String USER_DIRECTIVE_NAME  = "userdirective" ;
 	private final static String USER_DIRECTIVE_VALUE = getDirectives() ;
 	
+	/**
+	 * Returns a list of all the classes used as "Specific Directives" <br>
+	 * @return a string with all class names separated by a comma
+	 */
 	private static String getDirectives() {
 		return 
 				UsingDirective.class.getCanonicalName() 
@@ -94,14 +98,14 @@ public class GeneratorProperties {
 
 		Properties properties = new Properties();
 
-		// Try to allow relative path for #include and #parse 
 		// Added 2016/09/29 LGU
-		// No regression
-//		properties.setProperty(RuntimeConstants.EVENTHANDLER_INCLUDE, IncludeRelativePath.class.getName() );
-//		properties.setProperty(RuntimeConstants.EVENTHANDLER_INCLUDE, IncludeRelativePath.class.getCanonicalName() );
-//		properties.setProperty(RuntimeConstants.EVENTHANDLER_INCLUDE, "xxx.xxx" );
+		// Set the name of the class that is designed to managed #parse and #include templates paths
 		properties.setProperty(RuntimeConstants.EVENTHANDLER_INCLUDE, IncludeEventImpl.class.getCanonicalName() );
 		
+		// Added 2016/09/29 LGU
+		// Force the templates path to "" instead of "."
+		// There's no path for #parse and #include 
+		// The full path is built by "IncludeEventImpl"
 		properties.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, "" );
 		
 		// Set all the "user directives" ( list of classes names ) : OK, it works
@@ -113,9 +117,10 @@ public class GeneratorProperties {
 		printProperty(properties, USER_DIRECTIVE_NAME);
 		
 		// Initialize the Velocity Runtime with a Properties object.
-		// The source code shows that the 'init' method can be called several times
-		// only the first call is processed 
+		// The source code shows that the 'init' method can be called several times (only the first call is processed) 
+		// "RuntimeSingleton" is a set of static methods, it encapsulate a single instance of "RuntimeInstance" holding the configuration
 		RuntimeSingleton.init(properties) ;
+		
 		
 		// After RuntimeSingleton.init(properties) the configuration is as expected
 		ExtendedProperties configuration = RuntimeSingleton.getConfiguration();
