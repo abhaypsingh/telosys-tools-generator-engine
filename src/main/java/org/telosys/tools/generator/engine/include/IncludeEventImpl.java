@@ -36,9 +36,9 @@ public class IncludeEventImpl implements IncludeEventHandler {
         String currentResourcePath,
         String directiveName)
     {
-    	System.out.println(" - includeResourcePath = " + includeResourcePath);
-    	System.out.println(" - currentResourcePath = " + currentResourcePath); // template.name
-    	System.out.println(" - directiveName = " + directiveName);
+//    	System.out.println(" - includeResourcePath = " + includeResourcePath);
+//    	System.out.println(" - currentResourcePath = " + currentResourcePath); // template.name
+//    	System.out.println(" - directiveName = " + directiveName);
     	
     	
 //    	// Doesn't work due to invalid path
@@ -60,18 +60,18 @@ public class IncludeEventImpl implements IncludeEventHandler {
 //            return includeResourcePath;
 //        }
 //
-        int lastslashpos = Math.max(
+        int lastSlashPosition = Math.max(
                 currentResourcePath.lastIndexOf("/"),
                 currentResourcePath.lastIndexOf("\\")
                 );
 
-        if (lastslashpos == -1) {
+        if (lastSlashPosition == -1) {
             // No '/' or '\' character => we are at the root of the tree
             return includeResourcePath;
         }
         else {
             // cut at the last '/' or '\'
-        	String folder = currentResourcePath.substring(0,lastslashpos);
+        	String folder = currentResourcePath.substring(0,lastSlashPosition);
         	return FileUtil.buildFilePath(folder, includeResourcePath);
 //            return currentResourcePath.substring(0,lastslashpos) + "/" + includeResourcePath;
         }

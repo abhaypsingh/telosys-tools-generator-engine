@@ -41,7 +41,7 @@ public class GeneratorEngine {
 	 */
 	public String generate(GeneratorTemplate generatorTemplate, GeneratorContext generatorContext) throws Exception {
 
-		GeneratorProperties.init(generatorTemplate.getFolderName());
+		GeneratorProperties.init();
 		
 		Template velocityTemplate = generatorTemplate.getVelocityTemplate() ;
 		

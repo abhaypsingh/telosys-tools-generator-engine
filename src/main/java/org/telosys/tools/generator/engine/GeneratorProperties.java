@@ -94,7 +94,7 @@ public class GeneratorProperties {
 	 * Initializes the Velocity engine properties <br>
 	 * Can be called several times <br>
 	 */
-	public final static void init(String templateFolder) {
+	public final static void init() {
 
 		Properties properties = new Properties();
 
@@ -111,7 +111,6 @@ public class GeneratorProperties {
 		// Set all the "user directives" ( list of classes names ) : OK, it works
 		properties.setProperty(USER_DIRECTIVE_NAME, USER_DIRECTIVE_VALUE);
 		
-		System.out.println("Properties size = " + properties.size() );
 		printProperty(properties, RuntimeConstants.EVENTHANDLER_INCLUDE);
 		printProperty(properties, RuntimeConstants.FILE_RESOURCE_LOADER_PATH);
 		printProperty(properties, USER_DIRECTIVE_NAME);
