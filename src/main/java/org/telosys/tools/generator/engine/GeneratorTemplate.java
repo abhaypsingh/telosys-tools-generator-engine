@@ -27,16 +27,11 @@ import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.RuntimeSingleton;
 import org.apache.velocity.runtime.parser.node.SimpleNode;
 import org.telosys.tools.commons.FileUtil;
-import org.telosys.tools.generator.engine.directive.AssertFalseDirective;
-import org.telosys.tools.generator.engine.directive.AssertTrueDirective;
-import org.telosys.tools.generator.engine.directive.CheckIdDirective;
-import org.telosys.tools.generator.engine.directive.ErrorDirective;
-import org.telosys.tools.generator.engine.directive.UsingDirective;
 
 public class GeneratorTemplate {
 
-	private final static String USER_DIRECTIVE_NAME  = "userdirective" ;
-	private final static String USER_DIRECTIVE_VALUE = getDirectives() ;
+//	private final static String USER_DIRECTIVE_NAME  = "userdirective" ;
+//	private final static String USER_DIRECTIVE_VALUE = getDirectives() ;
 	
 	private final String folderName ;
 	
@@ -90,6 +85,10 @@ public class GeneratorTemplate {
 
 	protected String getFileName() {
 		return fileName;
+	}
+
+	protected String getAbsoluteFileName() {
+		return FileUtil.buildFilePath(folderName, fileName);
 	}
 
 	protected byte[] getContentByteArray() {
@@ -149,23 +148,32 @@ public class GeneratorTemplate {
         
 		RuntimeServices runtimeServices = RuntimeSingleton.getRuntimeServices();
 		
-		//template.
-		runtimeServices.setProperty(USER_DIRECTIVE_NAME, USER_DIRECTIVE_VALUE);
-		//runtimeServices.init(arg0);
-
-//		SimpleNode node;
-//		try {
-//			node = runtimeServices.parse(templateContentReader, templateName);
-//		} catch (ParseException e) {			
-//			e.printStackTrace();
-//			throw new Exception("Parsing error in template",e);
-//		}
+// Set globally in GeneratorEngine
+//		
+//		// Try to allow relative path for #include and #parse 
+//		// Added 2016/09/29 LGU
+//		// No regression
+//		runtimeServices.setProperty(RuntimeConstants.EVENTHANDLER_INCLUDE, IncludeRelativePath.class.getName() );
+//		
+//		// Set all the "user directives" ( list of classes names ) : OK, it works
+//		runtimeServices.setProperty(USER_DIRECTIVE_NAME, USER_DIRECTIVE_VALUE);
+//		//runtimeServices.init(arg0);
+//
+		
+		// TODO : TEST 
+		// Set the current template folder as the resource loader path 
+		// No effect (not int paths list )
+		//runtimeServices.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, this.getFolderName() );
+		
+		
 		// 'parse' throws Velocity 'ParseException' ( extends 'java.lang.Exception' )
 		SimpleNode node = runtimeServices.parse(templateContentReader, templateName); // v 3.0.0
 
 		Template template = new Template();
 		template.setRuntimeServices(runtimeServices);
 		template.setData(node);
+		//template.setName(templateName); // Added for tests with #include/#parse : passed to IncludeEventImpl ( as currentResourcePath ) 
+		template.setName(getAbsoluteFileName()); // Added for tests with #include/#parse : passed to IncludeEventImpl ( as currentResourcePath ) 
 		
 		// initializes the document.
 		// init() is not longer dependent upon context, but we need to let the init() carry the template name down throught 
@@ -175,17 +183,17 @@ public class GeneratorTemplate {
 		return template ;
 	}
 	
-	private static String getDirectives() {
-		return 
-				UsingDirective.class.getCanonicalName() 
-				+ ", " 
-				+ AssertTrueDirective.class.getCanonicalName() 
-				+ ", " 
-				+ AssertFalseDirective.class.getCanonicalName() 
-				+ ", " 
-				+ CheckIdDirective.class.getCanonicalName() 
-				+ ", " 
-				+ ErrorDirective.class.getCanonicalName() 
-				; // one or n directive(s) separated by a comma 
-	}	
+//	private static String getDirectives() {
+//		return 
+//				UsingDirective.class.getCanonicalName() 
+//				+ ", " 
+//				+ AssertTrueDirective.class.getCanonicalName() 
+//				+ ", " 
+//				+ AssertFalseDirective.class.getCanonicalName() 
+//				+ ", " 
+//				+ CheckIdDirective.class.getCanonicalName() 
+//				+ ", " 
+//				+ ErrorDirective.class.getCanonicalName() 
+//				; // one or n directive(s) separated by a comma 
+//	}	
 }

@@ -23,8 +23,26 @@ import org.telosys.tools.generator.engine.events.GeneratorEvents;
 
 public class GeneratorEngine {
 	
+	/**
+	 * Constructor
+	 */
+	public GeneratorEngine() {
+		super();
+	}
+
+	/**
+	 * Generates using the given template and context. <br>
+	 * The generation result is returned as a string. <br>
+	 * 
+	 * @param generatorTemplate
+	 * @param generatorContext
+	 * @return
+	 * @throws Exception
+	 */
 	public String generate(GeneratorTemplate generatorTemplate, GeneratorContext generatorContext) throws Exception {
 
+		GeneratorProperties.init(generatorTemplate.getFolderName());
+		
 		Template velocityTemplate = generatorTemplate.getVelocityTemplate() ;
 		
 		VelocityContext velocityContext = getVelocityContext(generatorContext);
@@ -34,6 +52,13 @@ public class GeneratorEngine {
 		return result.toString() ;
 	}
 
+	/**
+	 * Creates a VelocityContext from the given GeneratorContext <br>
+	 * and attach events to the VelocityContext <br>
+	 * 
+	 * @param generatorContext
+	 * @return
+	 */
 	private VelocityContext getVelocityContext(GeneratorContext generatorContext ) {
 		VelocityContext velocityContext = new VelocityContext(generatorContext.getMap());
 		
