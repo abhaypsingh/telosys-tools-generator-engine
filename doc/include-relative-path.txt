@@ -1,0 +1,64 @@
+FROM https://mail-archives.apache.org/mod_mbox/velocity-user/201003.mbox/%3C1268034706.1799.44.camel@phoenix%3E
+
+To enable relative resource loading for #include and #parse, you just
+have to put the following entry in your velocity.properties file:
+
+***
+eventhandler.include.class = org.apache.velocity.app.event.implement.IncludeRelativePath
+***
+
+Templates are then searched relatively to the current resource path.
+
+But relative resource loading is not the way to go if you want to refer
+to files outside the template root path:
+
+ - in the context of a webapp, the WebappLoader won't let you go out of
+the webapp root
+
+ - if you use the FileResourceLoader it won't let you exit the root path
+either, but you can specify several root paths, so it may be what you
+need:
+
+resource.loader = file
+file.resource.loader.class = org.apache.velocity.runtime.resource.loader.FileResourceLoader
+file.resource.loader.path = /var/www/myapplication
+file.resource.loader.path = /home/myhome/other_root_path
+
+and you may not need relative resource loading in this case.
+
+  Claude
+
+
+On lun., 2010-03-08 at 13:32 +0800, bluejoe2008 wrote:
+> hi, i have a question about #parse and #include directives
+> when using #parse(<templatePath>)
+> the <templatePath> should be under TEMPLATE_ROOT
+> but i want to use a relative file path such as "./b.vm" or "../b.vm"
+> especially when current template a.vm is not under TEMPLATE_ROOT
+> 
+> is it possible to use a relative file path in #parse and #include directives?
+> if not, who can tell me how to realize it?
+> 
+> 2010-03-08 
+> 
+> bluejoe2008 
+
+
+=====================================================================================================
+
+FROM https://stackoverflow.com/questions/3229197/where-does-velocity-search-for-the-template
+
+
+You need to initialize Velocity first by calling Velocity.init() (in the singleton model of usage), 
+or VelocityEngine.init() (if you use a separate instance), and passing appropriate configuration parameters. 
+These include the resource loader configuration.
+
+Where to put your template files depends in which resource loader you choose - 
+there are file, classpath, jar, url etc. resource loaders available.
+
+If you use the "file resource loader", the template path should be an absolute (directory/file) path. 
+
+With the jar resource loader, though, it must not be an absolute path (if your templates are within a jar, that is). 
+This is also true for links within your templates, i.e. if one of your templates includes another one by absolute path, 
+the jar resource loader will fail to load it.
+
